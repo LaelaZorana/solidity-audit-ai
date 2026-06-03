@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block title %}solidity-audit-ai — Paste a contract, get a security audit{% endblock %}
+
+{% block content %}
+
+<!-- Hero -->
+<section class="mx-auto max-w-3xl text-center">
+  <span class="inline-flex items-center gap-1.5 rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700 ring-1 ring-inset ring-brand-200 dark:bg-brand-500/10 dark:text-brand-300 dark:ring-brand-500/20">
+    <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    Offline · no keys · your source never leaves the page
+  </span>
+  <h1 class="mt-4 text-3xl font-extrabold tracking-tight sm:text-5xl">
+    Audit a <span class="sa-gradient-text">smart contract</span> in seconds
+  </h1>
+  <p class="mx-auto mt-4 max-w-2xl text-base text-slate-600 sm:text-lg dark:text-slate-300">
+    Paste Solidity and get high-signal findings mapped to <strong>SWC IDs</strong> — severity, exact line,
+    why it matters, and a fix-ready remediation. {{ detector_count }} static detectors plus an offline
+    AI-assisted explainer. No toolchain, no upload.
+  </p>
+  <div class="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-slate-500 dark:text-slate-400">
+    <span class="inline-flex items-center gap-1.5"><svg class="h-4 w-4 text-emerald-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Reentrancy, access control, selfdestruct…</span>
+    <span class="inline-flex items-center gap-1.5"><svg class="h-4 w-4 text-emerald-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>SWC-mapped + remediation</span>
+    <span class="inline-flex items-center gap-1.5"><svg class="h-4 w-4 text-emerald-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>CI gate via <code class="text-xs">--fail-on</code></span>
+  </div>
+</section>
+
+<!-- Workbench: input (left) + results (right) -->
+<section id="audit" class="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-2 lg:items-start">
+
+  <!-- Input panel -->
+  <form id="audit-form" class="sa-card flex flex-col p-5 sm:p-6">
+    <div class="flex flex-wrap items-center justify-between gap-2">
+      <label for="source" class="text-sm font-semibold text-slate-700 dark:text-slate-200">Contract source</label>
+      <input id="filename" name="filename" type="text" value="Contract.sol" aria-label="File name"
+             class="sa-focus w-36 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs text-slate-600 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300" />
+    </div>
+
+    <textarea id="source" name="source" required spellcheck="false" autocomplete="off"
+              aria-label="Solidity source code"
+              class="sa-textarea sa-focus mt-3 min-h-[340px] w-full flex-1 resize-y rounded-xl border border-slate-200 bg-slate-50 p-4 text-slate-800 placeholder:text-slate-400 dark:border-slate-700 dark:bg-slate-950/60 dark:text-slate-100"
+              placeholder="// SPDX-License-Identifier: MIT&#10;pragma solidity ^0.8.0;&#10;&#10;contract MyToken { /* paste your .sol here */ }">{{ sample }}</textarea>
+
+    <!-- Sample contracts: zero-friction one-click try -->
+    <div class="mt-4">
+      <div class="mb-2 text-[11px] font-semibold uppercase tracking-wider text-slate-400">Try a sample</div>
+      <div class="flex flex-wrap gap-2">
+        {% for s in samples %}
+        <button type="button" onclick="loadSample('{{ s.key }}', true)"
+                class="sa-focus inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white/60 px-3 py-1.5 text-xs font-medium text-slate-600 transition hover:border-brand-300 hover:text-brand-600 dark:border-slate-800 dark:bg-slate-900/40 dark:text-slate-300 dark:hover:border-brand-500/40 dark:hover:text-brand-400">
+          <span class="sev-badge sev-{{ s.sev_key }} !px-1.5 !py-0 !text-[9px]">{{ s.sev_label }}</span>
+          {{ s.label }}
+        </button>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="mt-5 flex items-center gap-3">
+      <button type="submit"
+              class="sa-focus inline-flex items-center justify-center gap-2 rounded-xl bg-brand-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700 active:translate-y-px">
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+        Audit contract
+      </button>
+      <span class="text-xs text-slate-400">or press <kbd class="rounded border border-slate-300 bg-slate-100 px-1.5 py-0.5 font-sans text-[10px] dark:border-slate-700 dark:bg-slate-800">⌘/Ctrl</kbd> + <kbd class="rounded border border-slate-300 bg-slate-100 px-1.5 py-0.5 font-sans text-[10px] dark:border-slate-700 dark:bg-slate-800">Enter</kbd></span>
+    </div>
+  </form>
+
+  <!-- Results panel -->
+  <div id="results-panel" class="lg:sticky lg:top-24">
+    <!-- Empty state -->
+    <div id="state-empty" class="sa-card flex min-h-[440px] flex-col items-center justify-center gap-3 p-10 text-center">
+      <span class="grid h-14 w-14 place-items-center rounded-2xl bg-brand-50 text-brand-500 dark:bg-brand-500/10 dark:text-brand-400">
+        <svg class="h-7 w-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="m9.5 13.5 1.5 1.5 3-3"/></svg>
+      </span>
+      <p class="text-sm font-medium text-slate-700 dark:text-slate-200">Your audit report appears here.</p>
+      <p class="max-w-xs text-xs text-slate-400">Paste a contract and hit <span class="font-semibold text-slate-500 dark:text-slate-300">Audit contract</span>, or load a sample to see findings instantly.</p>
+    </div>
+
+    <!-- Loading state -->
+    <div id="state-loading" hidden class="sa-card flex min-h-[440px] flex-col items-center justify-center gap-4 p-10 text-center">
+      <span class="grid h-12 w-12 place-items-center rounded-full bg-brand-600 shadow-lg shadow-brand-500/30"><span class="sa-spin"></span></span>
+      <p class="text-sm font-medium text-slate-600 dark:text-slate-300">Running {{ detector_count }} detectors…</p>
+    </div>
+
+    <!-- Error state -->
+    <div id="state-error" hidden class="sa-card flex min-h-[440px] flex-col items-center justify-center gap-3 p-10 text-center">
+      <span class="grid h-12 w-12 place-items-center rounded-full bg-rose-50 text-rose-600 dark:bg-rose-500/10 dark:text-rose-400">
+        <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      </span>
+      <p class="text-sm font-medium text-slate-700 dark:text-slate-200">Couldn’t complete the audit</p>
+      <p id="state-error-msg" class="max-w-xs text-xs text-slate-400">Please try again.</p>
+    </div>
+
+    <!-- Results (filled by JS) -->
+    <div id="state-results" hidden></div>
+  </div>
+</section>
+
+<!-- Detector coverage -->
+<section id="detectors" class="mt-16">
+  <div class="text-center">
+    <h2 class="text-2xl font-bold tracking-tight sm:text-3xl">Detector <span class="sa-gradient-text">coverage</span></h2>
+    <p class="mx-auto mt-2 max-w-2xl text-sm text-slate-600 dark:text-slate-300">
+      {{ detector_count }} dependency-free static checks, each mapped to its SWC Registry class. High-signal by design — they fire on the vulnerable pattern and stay silent on the hardened one.
+    </p>
+  </div>
+
+  <div class="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    {% for d in detectors %}
+    <div class="sa-card finding-{{ d.sev_key }} p-4">
+      <div class="flex items-start justify-between gap-2">
+        <h3 class="text-sm font-semibold text-slate-900 dark:text-white">{{ d.title }}</h3>
+        <span class="sev-badge sev-{{ d.sev_key }}">{{ d.sev_label }}</span>
+      </div>
+      <div class="mt-2 flex flex-wrap gap-2">
+        <span class="meta-chip"><a href="https://swcregistry.io/docs/{{ d.swc_id }}" target="_blank" rel="noopener">{{ d.swc_id }}</a></span>
+        <span class="meta-chip"><code>{{ d.id }}</code></span>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- Seeded sample sources for one-click try (read by app.js) -->
+<script id="samples-data" type="application/json">{{ samples_json|safe }}</script>
+
+{% endblock %}

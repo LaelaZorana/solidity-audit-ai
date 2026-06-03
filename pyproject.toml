@@ -1,0 +1,54 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "solidity-audit-ai"
+version = "1.0.0"
+description = "AI-assisted static security auditor for Solidity smart contracts (offline-first)."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Laela Zorana" }]
+keywords = ["solidity", "security", "audit", "smart-contracts", "web3", "static-analysis", "swc"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Security",
+]
+# Core has no required deps; the web UI extra pulls FastAPI.
+dependencies = []
+
+[project.optional-dependencies]
+web = ["fastapi>=0.110", "uvicorn[standard]>=0.29", "python-multipart>=0.0.9"]
+dev = ["pytest>=8.0", "httpx>=0.27", "ruff>=0.4"]
+
+[project.scripts]
+solidity-audit-ai = "auditor.cli:main"
+
+[tool.setuptools]
+packages = ["auditor", "auditor.detectors", "auditor.llm"]
+include-package-data = true
+
+# Ship the web UI's Jinja templates and static assets (Tailwind, CSS, JS) inside
+# the wheel so the FastAPI app works when installed, not just from a source tree.
+[tool.setuptools.package-data]
+auditor = [
+    "templates/*.html",
+    "templates/partials/*.html",
+    "static/css/*.css",
+    "static/js/*.js",
+    "static/vendor/*.js",
+]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+ignore = ["E501"]

@@ -1,0 +1,9 @@
+# Core runtime: ZERO required third-party deps for static analysis + CLI.
+# The pure-Python detectors, engine, reports and CLI run on the standard library
+# alone, so the auditor works fully offline with nothing installed.
+
+# --- Optional: web UI (FastAPI). Install with: pip install -r requirements.txt
+fastapi>=0.110
+uvicorn[standard]>=0.29
+jinja2>=3.1            # transitive convenience for templating/escaping
+python-multipart>=0.0.9  # required by FastAPI for form (multipart) parsing

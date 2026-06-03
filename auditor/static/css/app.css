@@ -1,0 +1,180 @@
+/* solidity-audit-ai design system — Tailwind utilities + component refinements.
+   Clean modern SaaS: indigo/violet accent, Inter, generous whitespace,
+   light + dark. Severity palette for security findings. */
+
+:root {
+  --sa-accent: 99 102 241;        /* indigo-500  */
+  --sa-accent-strong: 79 70 229;  /* indigo-600  */
+  --sa-violet: 139 92 246;        /* violet-500  */
+
+  /* Severity scale (light). */
+  --sev-critical: 220 38 38;      /* red-600    */
+  --sev-high: 234 88 12;          /* orange-600 */
+  --sev-medium: 217 119 6;        /* amber-600  */
+  --sev-low: 8 145 178;           /* cyan-600   */
+  --sev-info: 100 116 139;        /* slate-500  */
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    Roboto, Helvetica, Arial, sans-serif;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Subtle page background gradient (light + dark). */
+.sa-bg {
+  background-image:
+    radial-gradient(60rem 60rem at 110% -10%, rgb(var(--sa-violet) / 0.10), transparent 55%),
+    radial-gradient(50rem 50rem at -10% 0%, rgb(var(--sa-accent) / 0.10), transparent 50%);
+}
+.dark .sa-bg {
+  background-image:
+    radial-gradient(60rem 60rem at 110% -10%, rgb(var(--sa-violet) / 0.16), transparent 55%),
+    radial-gradient(50rem 50rem at -10% 0%, rgb(var(--sa-accent) / 0.14), transparent 50%);
+}
+
+/* Gradient brand text. */
+.sa-gradient-text {
+  background-image: linear-gradient(
+    100deg, rgb(var(--sa-accent-strong)), rgb(var(--sa-violet))
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Card. */
+.sa-card {
+  border-radius: 1rem;
+  border: 1px solid rgb(226 232 240);          /* slate-200 */
+  background: rgb(255 255 255 / 0.85);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 1px 2px rgb(15 23 42 / 0.04), 0 8px 24px -12px rgb(15 23 42 / 0.12);
+}
+.dark .sa-card {
+  border-color: rgb(51 65 85 / 0.7);           /* slate-700 */
+  background: rgb(15 23 42 / 0.6);             /* slate-900 */
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 8px 28px -14px rgb(0 0 0 / 0.6);
+}
+
+/* Severity badge. */
+.sev-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+.sev-badge::before {
+  content: "";
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: currentColor;
+}
+.sev-critical { color: rgb(var(--sev-critical)); background: rgb(var(--sev-critical) / 0.12); }
+.sev-high     { color: rgb(var(--sev-high));     background: rgb(var(--sev-high) / 0.12); }
+.sev-medium   { color: rgb(var(--sev-medium));   background: rgb(var(--sev-medium) / 0.12); }
+.sev-low      { color: rgb(var(--sev-low));      background: rgb(var(--sev-low) / 0.12); }
+.sev-informational { color: rgb(var(--sev-info)); background: rgb(var(--sev-info) / 0.14); }
+
+/* Finding card severity rail (left border). */
+.finding-critical { border-left: 4px solid rgb(var(--sev-critical)); }
+.finding-high     { border-left: 4px solid rgb(var(--sev-high)); }
+.finding-medium   { border-left: 4px solid rgb(var(--sev-medium)); }
+.finding-low      { border-left: 4px solid rgb(var(--sev-low)); }
+.finding-informational { border-left: 4px solid rgb(var(--sev-info)); }
+
+/* Severity stat tile big number color. */
+.stat-critical .stat-n { color: rgb(var(--sev-critical)); }
+.stat-high .stat-n     { color: rgb(var(--sev-high)); }
+.stat-medium .stat-n   { color: rgb(var(--sev-medium)); }
+.stat-low .stat-n      { color: rgb(var(--sev-low)); }
+.stat-informational .stat-n { color: rgb(var(--sev-info)); }
+
+/* Meta chip (SWC / line / detector / confidence). */
+.meta-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.12rem 0.5rem;
+  border-radius: 0.5rem;
+  font-size: 0.72rem;
+  font-weight: 500;
+  border: 1px solid rgb(226 232 240);
+  background: rgb(248 250 252 / 0.8);
+  color: rgb(71 85 105);
+}
+.dark .meta-chip {
+  border-color: rgb(51 65 85 / 0.8);
+  background: rgb(30 41 59 / 0.6);
+  color: rgb(148 163 184);
+}
+.meta-chip code, .meta-chip a { color: inherit; font-weight: 600; }
+.meta-chip a:hover { color: rgb(var(--sa-accent-strong)); }
+
+/* Code block (monospace) used for source excerpts + fixes. */
+.code-block {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  border-radius: 0.6rem;
+  border: 1px solid rgb(226 232 240);
+  background: rgb(248 250 252);
+  color: rgb(30 41 59);
+  padding: 0.75rem 0.9rem;
+  overflow-x: auto;
+  white-space: pre;
+  tab-size: 4;
+}
+.dark .code-block {
+  border-color: rgb(51 65 85 / 0.8);
+  background: rgb(2 6 23 / 0.7);
+  color: rgb(226 232 240);
+}
+
+/* The contract input textarea. */
+.sa-textarea {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  tab-size: 4;
+}
+
+/* Focus ring. */
+.sa-focus:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgb(var(--sa-accent) / 0.4);
+}
+
+/* Spinner. */
+.sa-spin {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 999px;
+  border: 2px solid rgb(255 255 255 / 0.4);
+  border-top-color: rgb(255 255 255);
+  animation: sa-rotate 0.7s linear infinite;
+}
+@keyframes sa-rotate { to { transform: rotate(360deg); } }
+
+/* Fade-in for rendered results. */
+@keyframes sa-fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.sa-fade { animation: sa-fade-in 0.22s ease both; }
+
+/* Hide the [hidden] attribute robustly. */
+[hidden] { display: none !important; }
