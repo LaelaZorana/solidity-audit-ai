@@ -2,11 +2,11 @@
 
 > A fast, **rule-based** Solidity static analyzer: 10 [SWC](https://swcregistry.io)-mapped
 > detectors flag common, high-impact vulnerabilities in seconds, with **no Solidity toolchain
-> and no source ever leaving your machine** — plus an **optional** LLM layer that turns each
+> and no source ever leaving your machine**, plus an **optional** LLM layer that turns each
 > finding into a plain-English explanation and a code fix.
 
 > **How the "AI" part works (so nothing is oversold):** detection is *deterministic and
-> rule-based* — there is no model in the loop for finding bugs. The optional LLM only writes
+> rule-based*, with no model in the loop for finding bugs. The optional LLM only writes
 > the remediation prose, and the public demo (and any keyless run) uses a **deterministic
 > offline engine**, not a live model. Set an API key to swap in OpenAI/Anthropic for the
 > remediation text.
@@ -23,16 +23,16 @@ cost millions. Professional audits are slow and expensive, and most existing
 static tools either need a full Solidity toolchain (solc, a node, a compile step)
 or dump raw findings with no actionable fix. Developers want a fast, local
 pre-audit they can run on every commit that says *what is wrong, where, why it
-matters, and exactly how to fix it* — without shipping their source to a SaaS.
+matters, and exactly how to fix it*, without sending their source to a SaaS.
 
 ## What it does
 
 `solidity-audit-ai` runs a suite of **pure-Python static detectors** over a
 `.sol` file or directory, maps each finding to its [SWC](https://swcregistry.io)
 class and a severity, and then passes every finding through an **optional LLM
-remediation layer** — a deterministic offline engine by default — that produces a
+remediation layer** (a deterministic offline engine by default) that produces a
 plain-English explanation and a concrete code fix. It emits a terminal summary, a Markdown report, a self-contained HTML report
-with severity badges, and JSON for CI gating. It runs **fully offline** — the
+with severity badges, and JSON for CI gating. It runs **fully offline**: the
 static analysis needs zero third-party dependencies, and the LLM layer falls back
 to a deterministic offline engine when no API key is set.
 
@@ -56,8 +56,8 @@ flowchart LR
 
 ## Results / impact
 
-Running the auditor on the bundled fixtures (`make demo`) — 8 intentionally
-vulnerable contracts and 4 safe counterparts — produces:
+Running the auditor on the bundled fixtures (`make demo`, 8 intentionally
+vulnerable contracts and 4 safe counterparts) produces:
 
 **Vulnerable fixtures (`samples/vulnerable/`, 8 files): 23 findings**
 
@@ -66,10 +66,10 @@ vulnerable contracts and 4 safe counterparts — produces:
 | Critical | 2 | Reentrancy (SWC-107), Unprotected `selfdestruct` (SWC-106) |
 | High | 9 | `tx.origin` auth (SWC-115), missing access control (SWC-105), untrusted `delegatecall` (SWC-112) |
 | Medium | 4 | Unchecked low-level call (SWC-104), weak randomness (SWC-120), pre-0.8 overflow (SWC-101) |
-| Low | 0 | — |
+| Low | 0 | (none) |
 | Informational | 8 | Floating pragma (SWC-103) |
 
-**Safe fixtures (`samples/safe/`, 4 files): 0 findings** — every detector stays
+**Safe fixtures (`samples/safe/`, 4 files): 0 findings**: every detector stays
 silent on the hardened counterpart, demonstrating a low false-positive rate.
 
 The test suite asserts both directions for each detector: it **fires** on the
@@ -123,17 +123,17 @@ python -m auditor.cli samples --provider openai
 ## Tech stack
 
 - **Python 3.9+**, standard library only for the core (analysis engine,
-  detectors, reports, CLI) — no solc, no node, no toolchain.
-- **Custom lightweight source model** — comment/string-stripping that preserves
+  detectors, reports, CLI), with no solc, no node, no toolchain.
+- **Custom lightweight source model:** comment/string-stripping that preserves
   line numbers + brace-matched function extraction, so detectors never fire on
   commented-out or stringified code.
-- **Pluggable LLM provider interface** — deterministic offline stub by default;
+- **Pluggable LLM provider interface:** deterministic offline stub by default;
   optional OpenAI / Anthropic backends that degrade gracefully to the stub.
 - **FastAPI + Uvicorn** for the optional web UI.
 - **pytest** for tests, **ruff** for linting, **GitHub Actions** for CI
   (matrix across Python 3.9 / 3.11 / 3.12 + a Docker build), **Docker** for
   containerized deployment.
-- **Optional Slither bridge** — if `slither` is installed it is merged in; if
+- **Optional Slither bridge:** if `slither` is installed it is merged in; if
   not, it is a silent no-op.
 
 ## Deploy
@@ -184,12 +184,12 @@ Each detector maps to an [SWC Registry](https://swcregistry.io) class.
 ## Screenshots
 
 > _Placeholders._ Generate them locally to drop in:
-> - `docs/webui.png` — the paste-a-contract web UI (hero, code editor, one-click
+> - `docs/webui.png`: the paste-a-contract web UI (hero, code editor, one-click
 >   samples, severity-summary tiles, findings cards). Run `make serve` and open
 >   <http://localhost:8000>.
-> - `docs/report.png` — the self-contained HTML report (severity headline +
+> - `docs/report.png`: the self-contained HTML report (severity headline +
 >   stat tiles + per-finding remediation). Run `make demo` (writes `report.html`).
-> - `docs/terminal.png` — the colorized CLI summary (`python -m auditor.cli samples`).
+> - `docs/terminal.png`: the colorized CLI summary (`python -m auditor.cli samples`).
 
 ---
 
