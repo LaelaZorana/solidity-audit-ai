@@ -1,6 +1,15 @@
 # solidity-audit-ai
 
-> Audit a Solidity smart contract for common, high-impact vulnerabilities in seconds — static detection plus AI-assisted, fix-ready remediation — fully offline.
+> A fast, **rule-based** Solidity static analyzer: 10 [SWC](https://swcregistry.io)-mapped
+> detectors flag common, high-impact vulnerabilities in seconds, with **no Solidity toolchain
+> and no source ever leaving your machine** — plus an **optional** LLM layer that turns each
+> finding into a plain-English explanation and a code fix.
+
+> **How the "AI" part works (so nothing is oversold):** detection is *deterministic and
+> rule-based* — there is no model in the loop for finding bugs. The optional LLM only writes
+> the remediation prose, and the public demo (and any keyless run) uses a **deterministic
+> offline engine**, not a live model. Set an API key to swap in OpenAI/Anthropic for the
+> remediation text.
 
 [![CI](https://github.com/LaelaZorana/solidity-audit-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/LaelaZorana/solidity-audit-ai/actions/workflows/ci.yml)
 ![Python](https://img.shields.io/badge/python-3.9%2B-blue)
@@ -20,9 +29,9 @@ matters, and exactly how to fix it* — without shipping their source to a SaaS.
 
 `solidity-audit-ai` runs a suite of **pure-Python static detectors** over a
 `.sol` file or directory, maps each finding to its [SWC](https://swcregistry.io)
-class and a severity, and then passes every finding through an **LLM-assisted
-remediation layer** that produces a plain-English explanation and a concrete code
-fix. It emits a terminal summary, a Markdown report, a self-contained HTML report
+class and a severity, and then passes every finding through an **optional LLM
+remediation layer** — a deterministic offline engine by default — that produces a
+plain-English explanation and a concrete code fix. It emits a terminal summary, a Markdown report, a self-contained HTML report
 with severity badges, and JSON for CI gating. It runs **fully offline** — the
 static analysis needs zero third-party dependencies, and the LLM layer falls back
 to a deterministic offline engine when no API key is set.
