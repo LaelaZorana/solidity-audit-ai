@@ -1,4 +1,4 @@
-// solidity-audit-ai — client logic: theme toggle, sample loading, audit flow.
+// solidity-audit-ai. Client logic: theme toggle, sample loading, audit flow.
 (function () {
   "use strict";
 
@@ -53,7 +53,7 @@
 
   // ---- Render ------------------------------------------------------------
   function summaryHeadline(summary, total) {
-    if (!total) return "No findings — looks clean";
+    if (!total) return "No findings. Looks clean";
     const parts = [];
     SEV_ORDER.forEach(function (s) {
       if (summary[s]) parts.push(summary[s] + " " + s);
@@ -176,7 +176,7 @@
             '<svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>' +
           "</span>" +
           '<p class="text-sm font-medium text-slate-700 dark:text-slate-200">No issues detected by the static detectors.</p>' +
-          '<p class="max-w-sm text-xs text-slate-400">A clean run is not a guarantee of safety — these are high-signal heuristics, not a full audit.</p>' +
+          '<p class="max-w-sm text-xs text-slate-400">A clean run is not a guarantee of safety. These are high-signal heuristics, not a full audit.</p>' +
         "</div>";
     }
     wrap.innerHTML = html;

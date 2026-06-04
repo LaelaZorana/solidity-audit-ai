@@ -500,7 +500,7 @@ class IntegerOverflowDetector(Detector):
                         references=self.references,
                     )
                     break
-        # 2) Explicit `unchecked { }` blocks (any version) — flag for review.
+        # 2) Explicit `unchecked { }` blocks (any version). Flag for review.
         for m in re.finditer(r"\bunchecked\s*\{", src.clean):
             line = src.line_of(m.start())
             yield Finding(

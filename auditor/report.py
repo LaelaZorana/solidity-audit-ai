@@ -97,7 +97,7 @@ def to_markdown(result: AuditResult, title: str = "Smart Contract Audit Report")
 # --------------------------------------------------------------------------- #
 # HTML (self-contained, no external assets)
 # --------------------------------------------------------------------------- #
-# Severity palette for the standalone report — neon-on-dark crypto identity.
+# Severity palette for the standalone report. Neon-on-dark crypto identity.
 _SEV_CSS = {
     "Critical": ("#fb7185", "rgba(244,63,94,.14)"),
     "High": ("#fb923c", "rgba(249,115,22,.14)"),
@@ -117,7 +117,7 @@ _HTML_HEAD = """<!doctype html>
 <meta name="color-scheme" content="dark light">
 <title>{title}</title>
 <style>
-/* solidity-audit-ai report — crypto-modern, dark-first, self-contained (no
+/* solidity-audit-ai report: crypto-modern, dark-first, self-contained (no
    external assets). Light mode via prefers-color-scheme. */
 :root {{
   --bg:#070a14; --panel:#0f1421; --panel2:#0c101c; --border:#262f47;

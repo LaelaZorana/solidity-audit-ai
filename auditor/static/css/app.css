@@ -1,4 +1,4 @@
-/* solidity-audit-ai — crypto-modern design system.
+/* solidity-audit-ai: crypto-modern design system.
    Dark-first, electric cyan + violet accents, glassmorphism, subtle grid
    texture, monospace-forward (Geist Mono) for contract code + SWC IDs.
    Identity inspired by CertiK / OpenZeppelin / Code4rena / Cyfrin. Light mode
@@ -61,7 +61,7 @@
   --sa-accent: var(--sa-cyan);    /* primary accent              */
   --sa-accent-strong: var(--sa-cyan-deep);
 
-  /* Severity scale — neon on dark. */
+  /* Severity scale: neon on dark. */
   --sev-critical: 244 63 94;      /* rose-500   */
   --sev-high: 251 113 133;        /* rose-400/orange blend → red */
   --sev-high: 249 115 22;         /* orange-500 */
@@ -70,7 +70,7 @@
   --sev-info: 148 163 184;        /* slate-400  */
   --sa-safe: 16 185 129;          /* emerald-500 (clean / success) */
 
-  /* Surfaces — light mode defaults; overridden under .dark. */
+  /* Surfaces: light mode defaults; overridden under .dark. */
   --sa-page: 248 250 252;         /* slate-50  */
   --sa-panel: 255 255 255;        /* white     */
   --sa-panel-2: 248 250 252;      /* slate-50  */
@@ -85,7 +85,7 @@
 }
 
 .dark {
-  /* Deep space-navy surfaces — the crypto-modern signature. */
+  /* Deep space-navy surfaces, the crypto-modern signature. */
   --sa-page: 7 10 20;             /* near-black navy           */
   --sa-panel: 15 20 33;           /* #0f1421  glass base       */
   --sa-panel-2: 12 16 28;         /* slightly darker tier      */
@@ -114,7 +114,7 @@ body {
   background-color: rgb(var(--sa-page));
 }
 
-/* Monospace utility — Geist Mono first. */
+/* Monospace utility: Geist Mono first. */
 .font-mono,
 code, kbd, samp, pre {
   font-family: "Geist Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo,
@@ -170,7 +170,7 @@ code, kbd, samp, pre {
 .dark .sa-accent { color: rgb(var(--sa-cyan)); }
 
 /* --------------------------------------------------------------------------- *
- * Glass card — the core surface. Semi-transparent + blur + hairline ring.
+ * Glass card, the core surface. Semi-transparent + blur + hairline ring.
  * --------------------------------------------------------------------------- */
 .sa-card {
   position: relative;
@@ -247,7 +247,7 @@ code, kbd, samp, pre {
 }
 .sa-btn:active { transform: translateY(1px); }
 
-/* Primary — electric cyan→violet gradient with neon glow. */
+/* Primary: electric cyan→violet gradient with neon glow. */
 .sa-btn-primary {
   padding: 0.8rem 1.25rem;
   color: #05161c;
@@ -280,7 +280,7 @@ code, kbd, samp, pre {
 .dark .sa-btn-ghost:hover { color: rgb(var(--sa-cyan)); }
 
 /* --------------------------------------------------------------------------- *
- * Severity badge — neon pill with leading dot.
+ * Severity badge: neon pill with leading dot.
  * --------------------------------------------------------------------------- */
 .sev-badge {
   display: inline-flex;
@@ -336,7 +336,7 @@ code, kbd, samp, pre {
 .sev-bar .seg-informational { background: rgb(var(--sev-info)); }
 
 /* --------------------------------------------------------------------------- *
- * Meta chip (SWC / line / detector / confidence) — monospace, terminal feel.
+ * Meta chip (SWC / line / detector / confidence): monospace, terminal feel.
  * --------------------------------------------------------------------------- */
 .meta-chip {
   display: inline-flex;
@@ -356,7 +356,7 @@ code, kbd, samp, pre {
 .dark .meta-chip a:hover { color: rgb(var(--sa-cyan)); }
 
 /* --------------------------------------------------------------------------- *
- * Code block (monospace) — terminal panel for source excerpts + fixes.
+ * Code block (monospace): terminal panel for source excerpts + fixes.
  * --------------------------------------------------------------------------- */
 .code-block {
   font-family: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas,
@@ -374,7 +374,7 @@ code, kbd, samp, pre {
 }
 .dark .code-block { box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.02); }
 
-/* The contract input textarea — terminal editor. */
+/* The contract input textarea: terminal editor. */
 .sa-textarea {
   font-family: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas,
     "Liberation Mono", monospace;
