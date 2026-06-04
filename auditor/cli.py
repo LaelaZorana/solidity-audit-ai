@@ -37,7 +37,7 @@ def _print_terminal(result) -> None:
     color = _supports_color()
     print()
     print("=" * 60)
-    print(" solidity-audit-ai — audit summary")
+    print(" solidity-audit-ai: audit summary")
     print("=" * 60)
     counts = result.counts_by_severity()
     for sev_label, n in counts.items():
@@ -55,7 +55,7 @@ def _print_terminal(result) -> None:
         r = _RESET if color else ""
         print(
             f"\n[{i}] {c}{f.severity.label}{r} {f.title} "
-            f"({f.swc_id}) — {f.location}"
+            f"({f.swc_id}), {f.location}"
         )
         if f.code:
             print(f"      {f.code}")

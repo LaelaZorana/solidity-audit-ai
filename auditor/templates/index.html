@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}solidity-audit-ai — Paste a contract, get a security audit{% endblock %}
+{% block title %}solidity-audit-ai: Paste a contract, get a security audit{% endblock %}
 
 {% block content %}
 
@@ -13,7 +13,7 @@
     Audit a <span class="sa-gradient-text">smart contract</span><br class="hidden sm:block" /> in seconds
   </h1>
   <p class="mx-auto mt-5 max-w-2xl text-base text-slate-600 sm:text-lg dark:text-slate-300">
-    Paste Solidity and get high-signal findings mapped to <strong class="text-slate-800 dark:text-slate-100">SWC IDs</strong> — severity,
+    Paste Solidity and get high-signal findings mapped to <strong class="text-slate-800 dark:text-slate-100">SWC IDs</strong>, severity,
     exact line, why it matters, and a copy-ready fix. {{ detector_count }} static detectors plus an offline
     AI-assisted explainer. No toolchain, no upload.
   </p>
@@ -114,7 +114,7 @@
   <div class="text-center">
     <h2 class="text-2xl font-bold tracking-tight sm:text-3xl">Detector <span class="sa-gradient-text">coverage</span></h2>
     <p class="mx-auto mt-2 max-w-2xl text-sm text-slate-600 dark:text-slate-300">
-      {{ detector_count }} dependency-free static checks, each mapped to its SWC Registry class. High-signal by design — they fire on the vulnerable pattern and stay silent on the hardened one.
+      {{ detector_count }} dependency-free static checks, each mapped to its SWC Registry class. High-signal by design. They fire on the vulnerable pattern and stay silent on the hardened one.
     </p>
   </div>
 

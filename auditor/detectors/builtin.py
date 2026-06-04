@@ -374,7 +374,7 @@ class DelegatecallDetector(Detector):
                 if user_controlled:
                     desc += (
                         " The target appears to come from a function argument, so it "
-                        "is attacker-controllable — this is high risk."
+                        "is attacker-controllable. This is high risk."
                     )
                 yield Finding(
                     detector=self.id,

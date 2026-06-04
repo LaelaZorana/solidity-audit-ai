@@ -31,7 +31,7 @@ def to_markdown(result: AuditResult, title: str = "Smart Contract Audit Report")
     lines.append("")
     lines.append(f"_Generated {ts} · engine: solidity-audit-ai · LLM layer: {result.provider}_")
     lines.append("")
-    lines.append(f"> **{_headline(result)}** — across {len(result.files)} file(s).")
+    lines.append(f"> **{_headline(result)}**, across {len(result.files)} file(s).")
     lines.append("")
     lines.append("## Summary")
     lines.append("")
@@ -54,7 +54,7 @@ def to_markdown(result: AuditResult, title: str = "Smart Contract Audit Report")
         lines.append("No findings. ✅ No issues detected by the static detectors.")
         lines.append("")
         lines.append(
-            "> A clean run is not a guarantee of safety — these are high-signal "
+            "> A clean run is not a guarantee of safety. These are high-signal "
             "heuristics, not a full audit."
         )
         return "\n".join(lines) + "\n"
@@ -232,7 +232,7 @@ def _headline(result: AuditResult) -> str:
     """A one-line, recruiter-readable headline: 'N findings: X Critical, ...'."""
     counts = result.counts_by_severity()
     if not result.total:
-        return "No findings — clean run"
+        return "No findings, clean run"
     parts = [f"{counts[s.label]} {s.label}" for s in sorted(Severity, reverse=True) if counts[s.label]]
     n = result.total
     return f"{n} finding{'s' if n != 1 else ''}: " + ", ".join(parts)
@@ -298,7 +298,7 @@ def to_html(result: AuditResult, title: str = "Smart Contract Audit Report") -> 
             '<path d="M20 6 9 17l-5-5"/></svg></div>'
             '<div class="t">No findings.</div>'
             '<div class="s">No issues detected by the static detectors. A clean run is not a '
-            "guarantee of safety — these are high-signal heuristics, not a full audit.</div></div>"
+            "guarantee of safety. These are high-signal heuristics, not a full audit.</div></div>"
         )
         parts.append(_HTML_FOOT)
         return "".join(parts)
