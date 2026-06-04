@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 /// @title PhishableWallet
-/// @notice Uses tx.origin for auth — vulnerable to phishing via a relay contract.
+/// @notice Uses tx.origin for auth, vulnerable to phishing via a relay contract.
 contract PhishableWallet {
     address public owner;
 

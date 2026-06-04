@@ -2,7 +2,7 @@
 pragma solidity ^0.7.6;
 
 /// @title OldToken
-/// @notice Pre-0.8 arithmetic without SafeMath — silent overflow/underflow.
+/// @notice Pre-0.8 arithmetic without SafeMath: silent overflow/underflow.
 contract OldToken {
     mapping(address => uint256) public balanceOf;
 

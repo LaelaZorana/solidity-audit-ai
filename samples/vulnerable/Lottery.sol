@@ -12,7 +12,7 @@ contract NaiveLottery {
     }
 
     // VULNERABLE: block.timestamp and block.prevrandao are miner/validator
-    // influenced — the winner can be predicted or manipulated.
+    // influenced, so the winner can be predicted or manipulated.
     function pickWinner() external returns (address) {
         uint256 idx = uint256(
             keccak256(abi.encodePacked(block.timestamp, block.prevrandao))
