@@ -77,7 +77,7 @@ vulnerable fixture and does **not** false-positive on the safe one.
 
 ## Quickstart
 
-No dependencies are required for the core auditor — it runs on the Python
+No dependencies are required for the core auditor; it runs on the Python
 standard library alone.
 
 ```bash
@@ -101,7 +101,7 @@ Run the tests (offline):
 python -m pytest -q
 ```
 
-Optional web UI — a polished **paste-a-contract** workbench (light/dark, Tailwind,
+Optional web UI: a polished **paste-a-contract** workbench (light/dark, Tailwind,
 one-click sample contracts, findings rendered as severity-badged cards with a
 summary headline). Runs fully offline; Tailwind is vendored, so no network is
 needed:
@@ -149,9 +149,9 @@ docker run --rm -v "$PWD/contracts:/data" solidity-audit-ai \
     python -m auditor.cli /data --format json
 ```
 
-The container runs as a non-root user and ships a `/health` healthcheck, so it
+The container runs as a non-root user and exposes a `/health` healthcheck, so it
 drops straight into any container platform (Fly.io, Render, Cloud Run, ECS,
-Kubernetes). No secrets are required — set `OPENAI_API_KEY` / `ANTHROPIC_API_KEY`
+Kubernetes). No secrets are required; set `OPENAI_API_KEY` / `ANTHROPIC_API_KEY`
 only if you want live LLM remediation.
 
 **CI integration.** Add a gate to any pipeline:
