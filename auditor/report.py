@@ -97,13 +97,13 @@ def to_markdown(result: AuditResult, title: str = "Smart Contract Audit Report")
 # --------------------------------------------------------------------------- #
 # HTML (self-contained, no external assets)
 # --------------------------------------------------------------------------- #
-# Severity palette for the standalone report (light theme, on-brand indigo).
+# Severity palette for the standalone report — neon-on-dark crypto identity.
 _SEV_CSS = {
-    "Critical": ("#dc2626", "rgba(220,38,38,.10)"),
-    "High": ("#ea580c", "rgba(234,88,12,.10)"),
-    "Medium": ("#d97706", "rgba(217,119,6,.10)"),
-    "Low": ("#0891b2", "rgba(8,145,178,.10)"),
-    "Informational": ("#64748b", "rgba(100,116,139,.12)"),
+    "Critical": ("#fb7185", "rgba(244,63,94,.14)"),
+    "High": ("#fb923c", "rgba(249,115,22,.14)"),
+    "Medium": ("#fbbf24", "rgba(245,158,11,.14)"),
+    "Low": ("#38bdf8", "rgba(56,189,248,.14)"),
+    "Informational": ("#94a3b8", "rgba(148,163,184,.14)"),
 }
 
 
@@ -114,86 +114,105 @@ def _sev_key(label: str) -> str:
 _HTML_HEAD = """<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
 <title>{title}</title>
 <style>
+/* solidity-audit-ai report — crypto-modern, dark-first, self-contained (no
+   external assets). Light mode via prefers-color-scheme. */
 :root {{
-  --bg:#f8fafc; --panel:#ffffff; --border:#e2e8f0; --text:#0f172a; --muted:#64748b;
-  --soft:#f1f5f9; --code-bg:#f8fafc; --accent:#4f46e5; --accent-soft:#eef2ff;
+  --bg:#070a14; --panel:#0f1421; --panel2:#0c101c; --border:#262f47;
+  --text:#e2e8f0; --muted:#94a3b8; --faint:#64748b; --soft:#141a2b;
+  --code-bg:#090c16; --cyan:#22d3ee; --violet:#8b5cf6; --safe:#34d399;
+  --grid:rgba(148,163,184,.05);
 }}
-@media (prefers-color-scheme: dark) {{
+@media (prefers-color-scheme: light) {{
   :root {{
-    --bg:#020617; --panel:#0f172a; --border:#1e293b; --text:#e2e8f0; --muted:#94a3b8;
-    --soft:#1e293b; --code-bg:#020617; --accent:#818cf8; --accent-soft:rgba(99,102,241,.12);
+    --bg:#f8fafc; --panel:#ffffff; --panel2:#f8fafc; --border:#e2e8f0;
+    --text:#0f172a; --muted:#475569; --faint:#64748b; --soft:#f1f5f9;
+    --code-bg:#f8fafc; --cyan:#0891b2; --violet:#7c3aed; --safe:#059669;
+    --grid:rgba(15,23,42,.04);
   }}
 }}
 * {{ box-sizing: border-box; }}
 html {{ -webkit-text-size-adjust: 100%; }}
-body {{ font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-       margin:0; background:var(--bg); color:var(--text); line-height:1.6;
+body {{ font-family: "Geist", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+       margin:0; background:var(--bg); color:var(--text); line-height:1.65;
        background-image:
-         radial-gradient(48rem 48rem at 110% -10%, rgba(139,92,246,.08), transparent 55%),
-         radial-gradient(42rem 42rem at -10% 0%, rgba(99,102,241,.08), transparent 50%);
+         radial-gradient(46rem 46rem at 92% -10%, rgba(139,92,246,.16), transparent 60%),
+         radial-gradient(50rem 50rem at -8% 2%, rgba(34,211,238,.14), transparent 55%),
+         linear-gradient(var(--grid) 1px, transparent 1px),
+         linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+       background-size: auto, auto, 56px 56px, 56px 56px;
        -webkit-font-smoothing:antialiased; }}
-.wrap {{ max-width: 920px; margin: 0 auto; padding: 40px 20px 64px; }}
-.brand {{ display:flex; align-items:center; gap:10px; margin-bottom:20px; }}
-.brand .mark {{ width:34px; height:34px; border-radius:10px; display:grid; place-items:center;
-                background:linear-gradient(135deg,#4f46e5,#8b5cf6); color:#fff; flex:none;
-                box-shadow:0 6px 16px -6px rgba(79,70,229,.6); }}
-.brand .name {{ font-weight:800; font-size:.95rem; letter-spacing:-.01em; }}
-.brand .name span {{ background:linear-gradient(100deg,#4f46e5,#8b5cf6);
+.wrap {{ max-width: 920px; margin: 0 auto; padding: 44px 20px 64px; }}
+.brand {{ display:flex; align-items:center; gap:11px; margin-bottom:22px; }}
+.brand .mark {{ width:36px; height:36px; border-radius:11px; display:grid; place-items:center;
+                background:linear-gradient(135deg,var(--cyan),var(--violet)); color:#05161c; flex:none;
+                box-shadow:0 0 28px -6px rgba(34,211,238,.6); }}
+.brand .name {{ font-family:"Geist Mono",ui-monospace,SFMono-Regular,Menlo,monospace; font-weight:700; font-size:.95rem; letter-spacing:-.01em; }}
+.brand .name span {{ background:linear-gradient(100deg,var(--cyan),var(--violet));
                      -webkit-background-clip:text; background-clip:text; color:transparent; }}
-.brand .tag {{ font-size:.66rem; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); }}
-h1 {{ font-size: 1.85rem; font-weight:800; letter-spacing:-.02em; margin: 0 0 6px; }}
-.meta {{ color: var(--muted); font-size: .83rem; margin-bottom: 22px; }}
+.brand .tag {{ font-size:.64rem; text-transform:uppercase; letter-spacing:.16em; color:var(--faint); }}
+h1 {{ font-size: 1.9rem; font-weight:800; letter-spacing:-.02em; margin: 0 0 6px; }}
+.meta {{ color: var(--muted); font-size: .83rem; margin-bottom: 22px; font-family:"Geist Mono",ui-monospace,Menlo,monospace; }}
 .meta code {{ color:var(--text); }}
-.headline {{ display:flex; align-items:center; gap:10px; background:var(--panel);
-             border:1px solid var(--border); border-radius:14px; padding:16px 18px; margin-bottom:18px;
-             box-shadow:0 1px 2px rgba(15,23,42,.04), 0 8px 24px -16px rgba(15,23,42,.18); }}
-.headline .dot {{ width:10px; height:10px; border-radius:999px; flex:none; }}
+.glass {{ background:linear-gradient(180deg, rgba(255,255,255,.03), transparent), var(--panel);
+          border:1px solid var(--border); border-radius:16px; }}
+.headline {{ display:flex; align-items:center; gap:11px; padding:16px 18px; margin-bottom:14px;
+             background:linear-gradient(180deg, rgba(255,255,255,.03), transparent), var(--panel);
+             border:1px solid var(--border); border-radius:16px;
+             box-shadow:0 20px 48px -28px rgba(0,0,0,.7); }}
+.headline .dot {{ width:11px; height:11px; border-radius:999px; flex:none; box-shadow:0 0 10px 0 currentColor; }}
 .headline .txt {{ font-size:1.05rem; font-weight:700; }}
+.sevbar {{ display:flex; height:8px; border-radius:999px; overflow:hidden; background:var(--soft); margin:0 0 22px; }}
+.sevbar span {{ display:block; height:100%; }}
 .cards {{ display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin: 0 0 28px; }}
-.card {{ background:var(--panel); border:1px solid var(--border); border-radius:12px;
-         padding:14px 10px; text-align:center;
-         box-shadow:0 1px 2px rgba(15,23,42,.04); }}
-.card .n {{ font-size:1.7rem; font-weight:800; line-height:1; }}
-.card .l {{ font-size:.66rem; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); margin-top:6px; }}
-.card.dim {{ opacity:.55; }}
+.card {{ background:var(--panel2); border:1px solid var(--border); border-radius:13px;
+         padding:15px 10px; text-align:center; }}
+.card .n {{ font-family:"Geist Mono",ui-monospace,Menlo,monospace; font-size:1.7rem; font-weight:700; line-height:1; text-shadow:0 0 18px currentColor; }}
+.card .l {{ font-size:.64rem; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); margin-top:7px; }}
+.card.dim {{ opacity:.4; }}
 .badge {{ display:inline-flex; align-items:center; gap:.35rem; padding:.18rem .6rem; border-radius:999px;
-          font-size:.66rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em; white-space:nowrap; }}
-.badge::before {{ content:""; width:.45rem; height:.45rem; border-radius:999px; background:currentColor; }}
-.finding {{ background:var(--panel); border:1px solid var(--border); border-left-width:4px;
-            border-radius:14px; padding:20px 22px; margin:0 0 16px;
-            box-shadow:0 1px 2px rgba(15,23,42,.04), 0 10px 28px -18px rgba(15,23,42,.20); }}
+          font-family:"Geist Mono",ui-monospace,Menlo,monospace;
+          font-size:.64rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; white-space:nowrap;
+          border:1px solid currentColor; }}
+.badge::before {{ content:""; width:.45rem; height:.45rem; border-radius:999px; background:currentColor; box-shadow:0 0 8px 0 currentColor; }}
+.finding {{ background:linear-gradient(180deg, rgba(255,255,255,.02), transparent), var(--panel);
+            border:1px solid var(--border); border-left-width:3px;
+            border-radius:16px; padding:20px 22px; margin:0 0 16px;
+            box-shadow:0 20px 48px -30px rgba(0,0,0,.7); }}
 .finding-head {{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }}
 .finding h3 {{ margin:0; font-size:1.08rem; font-weight:700; }}
-.finding h3 .idx {{ color:var(--muted); font-weight:600; }}
+.finding h3 .idx {{ color:var(--faint); font-weight:600; font-family:"Geist Mono",ui-monospace,Menlo,monospace; }}
 .chips {{ display:flex; flex-wrap:wrap; gap:6px; margin:12px 0; }}
-.chip {{ display:inline-flex; align-items:center; gap:.3rem; padding:.12rem .5rem; border-radius:.5rem;
-         font-size:.72rem; border:1px solid var(--border); background:var(--soft); color:var(--muted); }}
+.chip {{ display:inline-flex; align-items:center; gap:.3rem; padding:.13rem .5rem; border-radius:.45rem;
+         font-family:"Geist Mono",ui-monospace,Menlo,monospace;
+         font-size:.72rem; border:1px solid var(--border); background:var(--panel2); color:var(--muted); }}
 .chip code, .chip a {{ color:var(--text); font-weight:600; text-decoration:none; }}
-.chip a:hover {{ color:var(--accent); }}
-pre {{ background:var(--code-bg); border:1px solid var(--border); border-radius:10px; padding:12px 14px;
-       overflow:auto; font-size:.8rem; line-height:1.6; margin:.6rem 0; }}
-code {{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }}
-.section-label {{ font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em;
+.chip a:hover {{ color:var(--cyan); }}
+pre {{ background:var(--code-bg); border:1px solid var(--border); border-radius:11px; padding:13px 15px;
+       overflow:auto; font-size:.8rem; line-height:1.65; margin:.6rem 0; }}
+code, pre {{ font-family: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }}
+.section-label {{ font-size:.66rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em;
                   color:var(--muted); margin-top:14px; margin-bottom:3px; }}
-.section-label.fix {{ color:#059669; }}
+.section-label.fix {{ color:var(--safe); }}
 .body-text {{ color:var(--text); font-size:.92rem; }}
-a {{ color:var(--accent); }}
+a {{ color:var(--cyan); }}
 .refs {{ font-size:.76rem; color:var(--muted); margin-top:12px; }}
 .refs a {{ color:var(--muted); text-decoration:underline; text-decoration-style:dotted; }}
-.empty {{ background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:40px 24px;
-          text-align:center; box-shadow:0 1px 2px rgba(15,23,42,.04); }}
-.empty .ok {{ width:48px; height:48px; border-radius:999px; display:inline-grid; place-items:center;
-              background:rgba(16,185,129,.12); color:#059669; margin-bottom:12px; }}
-.empty .t {{ font-weight:600; }}
+.empty {{ background:var(--panel); border:1px solid var(--border); border-radius:16px; padding:44px 24px;
+          text-align:center; box-shadow:0 20px 48px -30px rgba(0,0,0,.7); }}
+.empty .ok {{ width:52px; height:52px; border-radius:999px; display:inline-grid; place-items:center;
+              background:rgba(52,211,153,.12); color:var(--safe); margin-bottom:12px;
+              box-shadow:0 0 32px -6px rgba(52,211,153,.6); }}
+.empty .t {{ font-weight:700; }}
 .empty .s {{ color:var(--muted); font-size:.85rem; margin-top:6px; }}
-footer {{ color: var(--muted); font-size:.76rem; margin-top:40px; padding-top:20px;
-          border-top:1px solid var(--border); text-align:center; }}
+footer {{ color: var(--faint); font-size:.74rem; margin-top:40px; padding-top:20px;
+          border-top:1px solid var(--border); text-align:center; font-family:"Geist Mono",ui-monospace,Menlo,monospace; }}
 @media (max-width:640px) {{ .cards {{ grid-template-columns:repeat(2,1fr); }} h1 {{ font-size:1.5rem; }} }}
 </style></head><body><div class="wrap">
 <div class="brand">
-  <span class="mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></span>
+  <span class="mark"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></span>
   <span><span class="name">solidity<span>-audit</span>-ai</span><br><span class="tag">Smart contract security audit</span></span>
 </div>
 """
@@ -230,7 +249,7 @@ def to_html(result: AuditResult, title: str = "Smart Contract Audit Report") -> 
     )
 
     # Headline summary sentence.
-    top_color = "#059669" if not result.total else _SEV_CSS["Critical"][0]
+    top_color = "#34d399" if not result.total else _SEV_CSS["Critical"][0]
     if result.total:
         # color the dot by the worst present severity
         for sev in sorted(Severity, reverse=True):
@@ -241,6 +260,21 @@ def to_html(result: AuditResult, title: str = "Smart Contract Audit Report") -> 
         f'<div class="headline"><span class="dot" style="background:{top_color}"></span>'
         f'<span class="txt">{_esc(_headline(result))}</span></div>'
     )
+
+    # Severity distribution bar (segmented, proportional).
+    if result.total:
+        parts.append('<div class="sevbar">')
+        for sev in sorted(Severity, reverse=True):
+            n = counts[sev.label]
+            if not n:
+                continue
+            pct = n / result.total * 100
+            fg, _bg = _SEV_CSS[sev.label]
+            parts.append(
+                f'<span style="width:{pct:.4f}%;background:{fg}" '
+                f'title="{n} {sev.label}"></span>'
+            )
+        parts.append("</div>")
 
     # Summary stat tiles.
     parts.append('<div class="cards">')

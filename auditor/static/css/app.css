@@ -1,79 +1,300 @@
-/* solidity-audit-ai design system — Tailwind utilities + component refinements.
-   Clean modern SaaS: indigo/violet accent, Inter, generous whitespace,
-   light + dark. Severity palette for security findings. */
+/* solidity-audit-ai — crypto-modern design system.
+   Dark-first, electric cyan + violet accents, glassmorphism, subtle grid
+   texture, monospace-forward (Geist Mono) for contract code + SWC IDs.
+   Identity inspired by CertiK / OpenZeppelin / Code4rena / Cyfrin. Light mode
+   is fully supported via the `.dark` class toggle, but dark is the default.
 
-:root {
-  --sa-accent: 99 102 241;        /* indigo-500  */
-  --sa-accent-strong: 79 70 229;  /* indigo-600  */
-  --sa-violet: 139 92 246;        /* violet-500  */
+   Built on Tailwind utilities; this file adds the component layer + tokens.
+   Fully offline: fonts are vendored woff2 (no web-font CDN at runtime). */
 
-  /* Severity scale (light). */
-  --sev-critical: 220 38 38;      /* red-600    */
-  --sev-high: 234 88 12;          /* orange-600 */
-  --sev-medium: 217 119 6;        /* amber-600  */
-  --sev-low: 8 145 178;           /* cyan-600   */
-  --sev-info: 100 116 139;        /* slate-500  */
+/* --------------------------------------------------------------------------- *
+ * Vendored fonts (offline). Geist + Geist Mono are variable woff2 subsets.
+ * --------------------------------------------------------------------------- */
+@font-face {
+  font-family: "Geist";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/static/vendor/fonts/geist-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+    U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Geist";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/static/vendor/fonts/geist-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB,
+    U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Geist Mono";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/static/vendor/fonts/geist-mono-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+    U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Geist Mono";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/static/vendor/fonts/geist-mono-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB,
+    U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
+/* --------------------------------------------------------------------------- *
+ * Design tokens
+ * --------------------------------------------------------------------------- */
+:root {
+  /* Electric crypto accents (RGB triples for rgb() / alpha composition). */
+  --sa-cyan: 34 211 238;          /* electric cyan  (cyan-400)   */
+  --sa-cyan-deep: 6 182 212;      /* cyan-500                    */
+  --sa-violet: 139 92 246;        /* violet-500                  */
+  --sa-violet-deep: 124 58 237;   /* violet-600                  */
+  --sa-accent: var(--sa-cyan);    /* primary accent              */
+  --sa-accent-strong: var(--sa-cyan-deep);
+
+  /* Severity scale — neon on dark. */
+  --sev-critical: 244 63 94;      /* rose-500   */
+  --sev-high: 251 113 133;        /* rose-400/orange blend → red */
+  --sev-high: 249 115 22;         /* orange-500 */
+  --sev-medium: 245 158 11;       /* amber-500  */
+  --sev-low: 56 189 248;          /* sky-400    */
+  --sev-info: 148 163 184;        /* slate-400  */
+  --sa-safe: 16 185 129;          /* emerald-500 (clean / success) */
+
+  /* Surfaces — light mode defaults; overridden under .dark. */
+  --sa-page: 248 250 252;         /* slate-50  */
+  --sa-panel: 255 255 255;        /* white     */
+  --sa-panel-2: 248 250 252;      /* slate-50  */
+  --sa-line: 226 232 240;         /* slate-200 */
+  --sa-line-soft: 241 245 249;    /* slate-100 */
+  --sa-ink: 15 23 42;             /* slate-900 */
+  --sa-ink-soft: 71 85 105;       /* slate-600 */
+  --sa-ink-faint: 100 116 139;    /* slate-500 */
+  --sa-code-bg: 248 250 252;      /* slate-50  */
+  --sa-grid: 15 23 42;            /* grid line ink (light) */
+  --sa-grid-alpha: 0.04;
+}
+
+.dark {
+  /* Deep space-navy surfaces — the crypto-modern signature. */
+  --sa-page: 7 10 20;             /* near-black navy           */
+  --sa-panel: 15 20 33;           /* #0f1421  glass base       */
+  --sa-panel-2: 12 16 28;         /* slightly darker tier      */
+  --sa-line: 38 47 71;            /* cool slate border         */
+  --sa-line-soft: 26 33 52;       /* faint divider             */
+  --sa-ink: 226 232 240;          /* slate-200 text            */
+  --sa-ink-soft: 148 163 184;     /* slate-400                 */
+  --sa-ink-faint: 100 116 139;    /* slate-500                 */
+  --sa-code-bg: 9 12 22;          /* terminal black            */
+  --sa-grid: 148 163 184;         /* grid line ink (dark)      */
+  --sa-grid-alpha: 0.05;
+}
+
+/* --------------------------------------------------------------------------- *
+ * Base
+ * --------------------------------------------------------------------------- */
 html { scroll-behavior: smooth; }
 
 body {
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
-    Roboto, Helvetica, Arial, sans-serif;
-  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  font-family: "Geist", "Inter", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-feature-settings: "ss01", "cv01", "cv03";
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  color: rgb(var(--sa-ink));
+  background-color: rgb(var(--sa-page));
 }
 
-/* Subtle page background gradient (light + dark). */
+/* Monospace utility — Geist Mono first. */
+.font-mono,
+code, kbd, samp, pre {
+  font-family: "Geist Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo,
+    Consolas, "Liberation Mono", monospace;
+  font-feature-settings: "ss01", "zero";
+}
+
+/* --------------------------------------------------------------------------- *
+ * Page backdrop: aurora glows + fine engineering grid (the crypto canvas).
+ * --------------------------------------------------------------------------- */
 .sa-bg {
+  position: relative;
+  background-color: rgb(var(--sa-page));
   background-image:
-    radial-gradient(60rem 60rem at 110% -10%, rgb(var(--sa-violet) / 0.10), transparent 55%),
-    radial-gradient(50rem 50rem at -10% 0%, rgb(var(--sa-accent) / 0.10), transparent 50%);
+    radial-gradient(42rem 42rem at 88% -8%, rgb(var(--sa-violet) / 0.10), transparent 60%),
+    radial-gradient(46rem 46rem at -6% 4%, rgb(var(--sa-cyan) / 0.10), transparent 55%);
 }
 .dark .sa-bg {
   background-image:
-    radial-gradient(60rem 60rem at 110% -10%, rgb(var(--sa-violet) / 0.16), transparent 55%),
-    radial-gradient(50rem 50rem at -10% 0%, rgb(var(--sa-accent) / 0.14), transparent 50%);
+    radial-gradient(48rem 48rem at 90% -10%, rgb(var(--sa-violet) / 0.20), transparent 60%),
+    radial-gradient(52rem 52rem at -8% 2%, rgb(var(--sa-cyan) / 0.16), transparent 55%);
 }
+/* Fine grid overlay (Cyfrin-style engineering texture), masked to fade out. */
+.sa-bg::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgb(var(--sa-grid) / var(--sa-grid-alpha)) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(var(--sa-grid) / var(--sa-grid-alpha)) 1px, transparent 1px);
+  background-size: 56px 56px;
+  -webkit-mask-image: radial-gradient(120% 90% at 50% 0%, #000 35%, transparent 78%);
+  mask-image: radial-gradient(120% 90% at 50% 0%, #000 35%, transparent 78%);
+}
+/* Keep real content above the grid. */
+.sa-bg > * { position: relative; z-index: 1; }
 
-/* Gradient brand text. */
+/* --------------------------------------------------------------------------- *
+ * Brand gradient text + accent helpers
+ * --------------------------------------------------------------------------- */
 .sa-gradient-text {
   background-image: linear-gradient(
-    100deg, rgb(var(--sa-accent-strong)), rgb(var(--sa-violet))
+    100deg, rgb(var(--sa-cyan)), rgb(var(--sa-violet))
   );
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
-/* Card. */
+.sa-accent { color: rgb(var(--sa-accent-strong)); }
+.dark .sa-accent { color: rgb(var(--sa-cyan)); }
+
+/* --------------------------------------------------------------------------- *
+ * Glass card — the core surface. Semi-transparent + blur + hairline ring.
+ * --------------------------------------------------------------------------- */
 .sa-card {
+  position: relative;
   border-radius: 1rem;
-  border: 1px solid rgb(226 232 240);          /* slate-200 */
-  background: rgb(255 255 255 / 0.85);
-  backdrop-filter: blur(6px);
-  box-shadow: 0 1px 2px rgb(15 23 42 / 0.04), 0 8px 24px -12px rgb(15 23 42 / 0.12);
+  border: 1px solid rgb(var(--sa-line) / 0.9);
+  background: rgb(var(--sa-panel) / 0.72);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  backdrop-filter: blur(12px) saturate(140%);
+  box-shadow:
+    0 1px 0 0 rgb(255 255 255 / 0.04) inset,
+    0 1px 2px rgb(2 6 23 / 0.06),
+    0 14px 40px -22px rgb(2 6 23 / 0.18);
 }
 .dark .sa-card {
-  border-color: rgb(51 65 85 / 0.7);           /* slate-700 */
-  background: rgb(15 23 42 / 0.6);             /* slate-900 */
-  box-shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 8px 28px -14px rgb(0 0 0 / 0.6);
+  background: rgb(var(--sa-panel) / 0.62);
+  box-shadow:
+    0 1px 0 0 rgb(255 255 255 / 0.05) inset,
+    0 1px 2px rgb(0 0 0 / 0.4),
+    0 20px 48px -24px rgb(0 0 0 / 0.7);
 }
 
-/* Severity badge. */
+/* Accent-glow variant for hero/primary surfaces. */
+.sa-card--glow::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgb(var(--sa-cyan) / 0.55), rgb(var(--sa-violet) / 0.45));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------- *
+ * Pill / eyebrow tag (status chip vibe)
+ * --------------------------------------------------------------------------- */
+.sa-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: rgb(var(--sa-cyan-deep));
+  background: rgb(var(--sa-cyan) / 0.10);
+  border: 1px solid rgb(var(--sa-cyan) / 0.30);
+}
+.dark .sa-pill { color: rgb(var(--sa-cyan)); background: rgb(var(--sa-cyan) / 0.08); }
+.sa-pill .dot {
+  width: 0.45rem; height: 0.45rem; border-radius: 999px;
+  background: rgb(var(--sa-cyan));
+  box-shadow: 0 0 0 3px rgb(var(--sa-cyan) / 0.22);
+}
+
+/* --------------------------------------------------------------------------- *
+ * Buttons
+ * --------------------------------------------------------------------------- */
+.sa-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.8rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  line-height: 1;
+  transition: transform .12s ease, box-shadow .15s ease, filter .15s ease,
+    background-color .15s ease, border-color .15s ease, color .15s ease;
+}
+.sa-btn:active { transform: translateY(1px); }
+
+/* Primary — electric cyan→violet gradient with neon glow. */
+.sa-btn-primary {
+  padding: 0.8rem 1.25rem;
+  color: #05161c;
+  background-image: linear-gradient(120deg, rgb(var(--sa-cyan)), rgb(var(--sa-violet)));
+  box-shadow:
+    0 0 0 1px rgb(var(--sa-cyan) / 0.5) inset,
+    0 8px 24px -8px rgb(var(--sa-cyan) / 0.6),
+    0 6px 18px -10px rgb(var(--sa-violet) / 0.55);
+}
+.sa-btn-primary:hover {
+  filter: brightness(1.06);
+  box-shadow:
+    0 0 0 1px rgb(var(--sa-cyan) / 0.7) inset,
+    0 10px 30px -8px rgb(var(--sa-cyan) / 0.75),
+    0 8px 22px -10px rgb(var(--sa-violet) / 0.65);
+}
+
+/* Ghost / secondary. */
+.sa-btn-ghost {
+  padding: 0.55rem 0.85rem;
+  color: rgb(var(--sa-ink-soft));
+  border: 1px solid rgb(var(--sa-line));
+  background: rgb(var(--sa-panel) / 0.4);
+}
+.sa-btn-ghost:hover {
+  color: rgb(var(--sa-cyan-deep));
+  border-color: rgb(var(--sa-cyan) / 0.5);
+  background: rgb(var(--sa-cyan) / 0.06);
+}
+.dark .sa-btn-ghost:hover { color: rgb(var(--sa-cyan)); }
+
+/* --------------------------------------------------------------------------- *
+ * Severity badge — neon pill with leading dot.
+ * --------------------------------------------------------------------------- */
 .sev-badge {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  padding: 0.15rem 0.6rem;
+  padding: 0.18rem 0.6rem;
   border-radius: 999px;
-  font-size: 0.68rem;
+  font-size: 0.66rem;
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   line-height: 1.4;
   white-space: nowrap;
+  font-family: "Geist Mono", ui-monospace, monospace;
 }
 .sev-badge::before {
   content: "";
@@ -81,100 +302,139 @@ body {
   height: 0.45rem;
   border-radius: 999px;
   background: currentColor;
+  box-shadow: 0 0 0 3px rgb(255 255 255 / 0.06), 0 0 8px 0 currentColor;
 }
-.sev-critical { color: rgb(var(--sev-critical)); background: rgb(var(--sev-critical) / 0.12); }
-.sev-high     { color: rgb(var(--sev-high));     background: rgb(var(--sev-high) / 0.12); }
-.sev-medium   { color: rgb(var(--sev-medium));   background: rgb(var(--sev-medium) / 0.12); }
-.sev-low      { color: rgb(var(--sev-low));      background: rgb(var(--sev-low) / 0.12); }
-.sev-informational { color: rgb(var(--sev-info)); background: rgb(var(--sev-info) / 0.14); }
+.sev-critical { color: rgb(var(--sev-critical)); background: rgb(var(--sev-critical) / 0.12); border: 1px solid rgb(var(--sev-critical) / 0.30); }
+.sev-high     { color: rgb(var(--sev-high));     background: rgb(var(--sev-high) / 0.12);     border: 1px solid rgb(var(--sev-high) / 0.30); }
+.sev-medium   { color: rgb(var(--sev-medium));   background: rgb(var(--sev-medium) / 0.12);   border: 1px solid rgb(var(--sev-medium) / 0.30); }
+.sev-low      { color: rgb(var(--sev-low));      background: rgb(var(--sev-low) / 0.12);      border: 1px solid rgb(var(--sev-low) / 0.30); }
+.sev-informational { color: rgb(var(--sev-info)); background: rgb(var(--sev-info) / 0.14);    border: 1px solid rgb(var(--sev-info) / 0.28); }
 
-/* Finding card severity rail (left border). */
-.finding-critical { border-left: 4px solid rgb(var(--sev-critical)); }
-.finding-high     { border-left: 4px solid rgb(var(--sev-high)); }
-.finding-medium   { border-left: 4px solid rgb(var(--sev-medium)); }
-.finding-low      { border-left: 4px solid rgb(var(--sev-low)); }
-.finding-informational { border-left: 4px solid rgb(var(--sev-info)); }
+/* Finding card severity rail (left edge) + faint severity wash. */
+.finding-critical { border-left: 3px solid rgb(var(--sev-critical)); }
+.finding-high     { border-left: 3px solid rgb(var(--sev-high)); }
+.finding-medium   { border-left: 3px solid rgb(var(--sev-medium)); }
+.finding-low      { border-left: 3px solid rgb(var(--sev-low)); }
+.finding-informational { border-left: 3px solid rgb(var(--sev-info)); }
 
-/* Severity stat tile big number color. */
+/* Severity stat tile big number color + glow. */
 .stat-critical .stat-n { color: rgb(var(--sev-critical)); }
 .stat-high .stat-n     { color: rgb(var(--sev-high)); }
 .stat-medium .stat-n   { color: rgb(var(--sev-medium)); }
 .stat-low .stat-n      { color: rgb(var(--sev-low)); }
 .stat-informational .stat-n { color: rgb(var(--sev-info)); }
+.stat-n { font-family: "Geist Mono", ui-monospace, monospace; text-shadow: 0 0 18px currentColor; }
+.dark .stat-n { text-shadow: 0 0 22px currentColor; }
 
-/* Meta chip (SWC / line / detector / confidence). */
+/* Severity distribution bar (segmented). */
+.sev-bar { display: flex; height: 0.5rem; border-radius: 999px; overflow: hidden; background: rgb(var(--sa-line) / 0.6); }
+.sev-bar > span { display: block; height: 100%; }
+.sev-bar .seg-critical { background: rgb(var(--sev-critical)); }
+.sev-bar .seg-high     { background: rgb(var(--sev-high)); }
+.sev-bar .seg-medium   { background: rgb(var(--sev-medium)); }
+.sev-bar .seg-low      { background: rgb(var(--sev-low)); }
+.sev-bar .seg-informational { background: rgb(var(--sev-info)); }
+
+/* --------------------------------------------------------------------------- *
+ * Meta chip (SWC / line / detector / confidence) — monospace, terminal feel.
+ * --------------------------------------------------------------------------- */
 .meta-chip {
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
-  padding: 0.12rem 0.5rem;
-  border-radius: 0.5rem;
+  padding: 0.14rem 0.5rem;
+  border-radius: 0.45rem;
   font-size: 0.72rem;
   font-weight: 500;
-  border: 1px solid rgb(226 232 240);
-  background: rgb(248 250 252 / 0.8);
-  color: rgb(71 85 105);
+  font-family: "Geist Mono", ui-monospace, monospace;
+  border: 1px solid rgb(var(--sa-line) / 0.9);
+  background: rgb(var(--sa-panel-2) / 0.7);
+  color: rgb(var(--sa-ink-faint));
 }
-.dark .meta-chip {
-  border-color: rgb(51 65 85 / 0.8);
-  background: rgb(30 41 59 / 0.6);
-  color: rgb(148 163 184);
-}
-.meta-chip code, .meta-chip a { color: inherit; font-weight: 600; }
-.meta-chip a:hover { color: rgb(var(--sa-accent-strong)); }
+.meta-chip code, .meta-chip a { color: rgb(var(--sa-ink-soft)); font-weight: 600; text-decoration: none; }
+.meta-chip a:hover { color: rgb(var(--sa-cyan-deep)); }
+.dark .meta-chip a:hover { color: rgb(var(--sa-cyan)); }
 
-/* Code block (monospace) used for source excerpts + fixes. */
+/* --------------------------------------------------------------------------- *
+ * Code block (monospace) — terminal panel for source excerpts + fixes.
+ * --------------------------------------------------------------------------- */
 .code-block {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  font-family: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas,
+    "Liberation Mono", monospace;
   font-size: 0.8rem;
-  line-height: 1.6;
-  border-radius: 0.6rem;
-  border: 1px solid rgb(226 232 240);
-  background: rgb(248 250 252);
-  color: rgb(30 41 59);
-  padding: 0.75rem 0.9rem;
+  line-height: 1.65;
+  border-radius: 0.7rem;
+  border: 1px solid rgb(var(--sa-line) / 0.9);
+  background: rgb(var(--sa-code-bg));
+  color: rgb(var(--sa-ink));
+  padding: 0.8rem 0.95rem;
   overflow-x: auto;
   white-space: pre;
   tab-size: 4;
 }
-.dark .code-block {
-  border-color: rgb(51 65 85 / 0.8);
-  background: rgb(2 6 23 / 0.7);
-  color: rgb(226 232 240);
-}
+.dark .code-block { box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.02); }
 
-/* The contract input textarea. */
+/* The contract input textarea — terminal editor. */
 .sa-textarea {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  font-family: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas,
+    "Liberation Mono", monospace;
   font-size: 0.82rem;
-  line-height: 1.6;
+  line-height: 1.65;
   tab-size: 4;
+  background: rgb(var(--sa-code-bg)) !important;
+  border-color: rgb(var(--sa-line)) !important;
+  color: rgb(var(--sa-ink)) !important;
 }
+.sa-textarea::placeholder { color: rgb(var(--sa-ink-faint)); opacity: 0.7; }
+.sa-textarea:focus { border-color: rgb(var(--sa-cyan) / 0.6) !important; }
 
-/* Focus ring. */
+/* --------------------------------------------------------------------------- *
+ * Focus ring (electric)
+ * --------------------------------------------------------------------------- */
 .sa-focus:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px rgb(var(--sa-accent) / 0.4);
+  box-shadow: 0 0 0 3px rgb(var(--sa-cyan) / 0.45);
 }
 
-/* Spinner. */
+/* --------------------------------------------------------------------------- *
+ * Spinner (cyan)
+ * --------------------------------------------------------------------------- */
 .sa-spin {
   display: inline-block;
-  width: 1rem;
-  height: 1rem;
+  width: 1.1rem;
+  height: 1.1rem;
   border-radius: 999px;
-  border: 2px solid rgb(255 255 255 / 0.4);
-  border-top-color: rgb(255 255 255);
+  border: 2px solid rgb(var(--sa-cyan) / 0.25);
+  border-top-color: rgb(var(--sa-cyan));
   animation: sa-rotate 0.7s linear infinite;
 }
 @keyframes sa-rotate { to { transform: rotate(360deg); } }
 
-/* Fade-in for rendered results. */
+/* Scanning bars used in the loading state. */
+.sa-scan { display: grid; gap: 0.35rem; width: 11rem; }
+.sa-scan i {
+  display: block; height: 0.4rem; border-radius: 999px;
+  background: linear-gradient(90deg, rgb(var(--sa-cyan) / 0.15), rgb(var(--sa-cyan) / 0.6), rgb(var(--sa-cyan) / 0.15));
+  background-size: 200% 100%;
+  animation: sa-shimmer 1.2s ease-in-out infinite;
+}
+.sa-scan i:nth-child(2) { width: 78%; animation-delay: .15s; }
+.sa-scan i:nth-child(3) { width: 90%; animation-delay: .3s; }
+@keyframes sa-shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+/* --------------------------------------------------------------------------- *
+ * Fade-in for rendered results
+ * --------------------------------------------------------------------------- */
 @keyframes sa-fade-in {
   from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-.sa-fade { animation: sa-fade-in 0.22s ease both; }
+.sa-fade { animation: sa-fade-in 0.24s ease both; }
 
-/* Hide the [hidden] attribute robustly. */
+@media (prefers-reduced-motion: reduce) {
+  .sa-fade, .sa-spin, .sa-scan i { animation: none; }
+  html { scroll-behavior: auto; }
+}
+
+/* Robustly hide [hidden]. */
 [hidden] { display: none !important; }

@@ -64,7 +64,7 @@
   function renderSummary(summary, total, provider) {
     const tiles = SEV_ORDER.map(function (s) {
       const n = summary[s] || 0;
-      const dim = n === 0 ? "opacity-50" : "";
+      const dim = n === 0 ? "opacity-40" : "";
       return (
         '<div class="stat-' + sevKey(s) + ' sa-card flex flex-col items-center justify-center px-3 py-3 ' + dim + '">' +
           '<div class="stat-n text-2xl font-bold leading-none">' + n + "</div>" +
@@ -72,16 +72,27 @@
         "</div>"
       );
     }).join("");
+    // Segmented severity distribution bar (Code4rena/CertiK pattern).
+    var bar = "";
+    if (total) {
+      bar = '<div class="sev-bar mt-4">' + SEV_ORDER.map(function (s) {
+        var n = summary[s] || 0;
+        if (!n) return "";
+        var pct = (n / total) * 100;
+        return '<span class="seg-' + sevKey(s) + '" style="width:' + pct + '%" title="' + n + " " + s + '"></span>';
+      }).join("") + "</div>";
+    }
     const headlineClass = total ? "text-slate-900 dark:text-white" : "text-emerald-600 dark:text-emerald-400";
     return (
-      '<div class="sa-card sa-fade p-5 sm:p-6">' +
+      '<div class="sa-card sa-card--glow sa-fade p-5 sm:p-6">' +
         '<div class="flex flex-wrap items-start justify-between gap-3">' +
           "<div>" +
-            '<div class="text-xs font-semibold uppercase tracking-wider text-slate-400">Audit summary</div>' +
+            '<div class="text-[11px] font-semibold uppercase tracking-wider text-brand-500 dark:text-brand-400">Audit summary</div>' +
             '<h2 class="mt-1 text-xl font-bold sm:text-2xl ' + headlineClass + '">' + esc(summaryHeadline(summary, total)) + "</h2>" +
           "</div>" +
           '<span class="meta-chip">engine: offline · ' + esc(provider) + "</span>" +
         "</div>" +
+        bar +
         '<div class="mt-4 grid grid-cols-5 gap-2 sm:gap-3">' + tiles + "</div>" +
       "</div>"
     );
@@ -96,7 +107,7 @@
   function findingCard(f, idx) {
     const sev = sevKey(f.severity);
     const refs = (f.references || []).map(function (r) {
-      return '<a class="underline decoration-dotted hover:text-indigo-600 dark:hover:text-indigo-400" href="' +
+      return '<a class="underline decoration-dotted hover:text-brand-600 dark:hover:text-brand-400" href="' +
         esc(r) + '" target="_blank" rel="noopener">' + esc(r.replace(/^https?:\/\//, "")) + "</a>";
     }).join(" · ");
 
@@ -117,7 +128,7 @@
         '<div class="mt-3">' +
           '<div class="mb-1 flex items-center justify-between">' +
             '<div class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Suggested fix</div>' +
-            '<button type="button" class="copy-btn text-[11px] font-medium text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400" data-copy="' + esc(f.fix_suggestion) + '">Copy</button>' +
+            '<button type="button" class="copy-btn inline-flex items-center gap-1 rounded-md border border-slate-200 px-2 py-0.5 text-[11px] font-medium text-slate-400 transition hover:border-brand-400/50 hover:text-brand-600 dark:border-white/10 dark:hover:text-brand-400" data-copy="' + esc(f.fix_suggestion) + '">Copy fix</button>' +
           "</div>" +
           '<pre class="code-block">' + esc(f.fix_suggestion) + "</pre>" +
         "</div>";
